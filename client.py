@@ -9,15 +9,14 @@ class Netcat:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((ip, port))
 
-    def read(self, length=2048):
+    def read(self, length=1024):
         """ Read 1024 bytes off the socket """
-
         return self.socket.recv(length)
 
     def read_until(self, data):
         """ Read data into the buffer until we have data """
 
-        while not data in self.buff:
+        while data not in self.buff:
             self.buff += self.socket.recv(1024)
 
         pos = self.buff.find(data)
@@ -27,8 +26,7 @@ class Netcat:
         return rval
 
     def write(self, data):
-        self.socket.settimeout(500)
-        self.socket.send(data)
+        self.socket.sendall(data)
 
     def close(self):
         self.socket.close()
